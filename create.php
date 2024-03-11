@@ -5,11 +5,15 @@ session_start();
 if(isset($_POST['submit'])){  
   
    require 'config.php';  
-  
-   $tasks = $_POST['tasks'];
 
-   if (!is_array($tasks)) {
-       $tasks = array($tasks);
+   $tasks = [];
+   if(isset($_POST['task_names']) && isset($_POST['task_times'])) {
+       $task_names = $_POST['task_names'];
+       $task_times = $_POST['task_times'];
+       foreach($task_names as $index => $task_name) {
+           $task_time = isset($task_times[$index]) ? $task_times[$index] : ''; // If time is not provided, use empty string
+           $tasks[] = ['name' => $task_name, 'time_required' => $task_time];
+       }
    }
 
    $insertOneResult = $collection->insertOne([  
@@ -49,13 +53,32 @@ if(isset($_POST['submit'])){
       </div>  
       <div class="form-group">  
          <strong>Tasks:</strong>  
-         <textarea class="form-control" name="tasks" placeholder="Project Tasks" placeholder="Project Tasks"></textarea>  
+         <div id="task_fields">
+            <div class="task_field">
+               <input type="text" name="task_names[]" required="" class="form-control" placeholder="Task Name">
+               <input type="number" name="task_times[]" class="form-control" placeholder="Time required (hours)">
+            </div>
+         </div>
+         <button type="button" id="add_task" class="btn btn-primary">Add Task</button>
       </div>  
       <div class="form-group">  
          <button type="submit" name="submit" class="btn btn-success">Submit</button>  
       </div>  
    </form>  
 </div>  
+
+<script>
+document.getElementById('add_task').addEventListener('click', function() {
+    var taskFields = document.getElementById('task_fields');
+    var newTaskField = document.createElement('div');
+    newTaskField.classList.add('task_field');
+    newTaskField.innerHTML = `
+        <input type="text" name="task_names[]" required="" class="form-control" placeholder="Task Name">
+        <input type="number" name="task_times[]" class="form-control" placeholder="Time required (hours)">
+    `;
+    taskFields.appendChild(newTaskField);
+});
+</script>
   
 </body>  
-</html>  
+</html>

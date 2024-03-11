@@ -39,6 +39,7 @@ if(isset($_SESSION['success'])){
    <tr>  
       <th>Project Code</th>  
       <th>Project Name</th>  
+      <th>Tasks</th>
       <th>Action</th>  
    </tr>  
    <?php  
@@ -59,18 +60,15 @@ if(isset($_SESSION['success'])){
       echo "<td>".$project->code."</td>";  
       echo "<td>".$project->name."</td>";  
       echo "<td>";  
+      foreach ($project->tasks as $task) {
+          echo "<div>$task->name - Time required: $task->time_required hours</div>";
+      }
+      echo "</td>";
+      echo "<td>";  
       echo "<a href='edit.php?id=".$project->_id."' class='btn btn-primary'><i class='fas fa-edit'></i></a>"; // Edit button with icon
       echo "<a href='delete.php?id=".$project->_id."' class='btn btn-danger' onclick=\"return confirm('Are you sure you want to delete this project?');\"><i class='fas fa-trash'></i></a>"; // Delete button with icon
       echo "</td>";  
       echo "</tr>";  
-
-      foreach ($project->tasks as $task) {
-          echo "<tr>";
-          echo "<td></td>"; 
-          echo "<td>$task</td>";
-          echo "<td></td>"; 
-          echo "</tr>";
-      }
    };  
    ?>  
 </table>  
